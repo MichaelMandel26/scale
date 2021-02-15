@@ -22,7 +22,7 @@ fn main() -> Result<()> {
         match get_dir_size(&opts.input) {
             Ok(s) => size = s,
             Err(_) => {
-                println!("Konnte das Verzeichnis nicht lesen");
+                println!("Could not get the directory size");
                 process::exit(1);
             }
         }
