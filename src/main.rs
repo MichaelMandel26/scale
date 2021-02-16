@@ -1,18 +1,17 @@
 use clap::Clap;
+use scale::{convert, Prefix};
 use std::{fs, path::PathBuf, process};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 #[derive(Clap)]
-#[clap(version = "1.0", author = "Dzefo")]
+#[clap(version = "0.1.1", author = "Dzefo")]
 struct Opts {
     /// The Path which should be evaluated
     input: String,
 }
 
 fn main() -> Result<()> {
-    use pretty_bytes::converter::convert;
-
     let opts: Opts = Opts::parse();
 
     let size;
@@ -27,7 +26,8 @@ fn main() -> Result<()> {
             }
         }
     }
-    println!("{}", convert(size as f64));
+
+    println!("{}", convert(size as f64, Prefix::Binary));
 
     Ok(())
 }
