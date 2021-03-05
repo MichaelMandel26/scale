@@ -1,4 +1,7 @@
 use std::cmp;
+use std::{fs, path::PathBuf};
+
+type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 pub enum Prefix {
     Binary,
@@ -26,4 +29,26 @@ pub fn convert(num: f64, prefix: Prefix) -> String {
         * 1_f64;
     let unit = units[exponent as usize];
     format!("{}{} {}", negative, pretty_bytes, unit)
+}
+
+pub fn get_file_size(path: &String) -> u64 {
+    let meta = fs::metadata(path);
+    match meta {
+        Ok(m) => m.len(),
+        Err(_) => 0,
+    }
+}
+
+pub fn get_dir_size(path: impl Into<PathBuf>) -> Result<u64> {
+    fn get_dir_size(mut dir: fs::ReadDir) -> Result<u64> {
+        dir.try_fold(0, |acc, file| {
+            let file = file?;
+            let size = match file.metadata()? {
+                data if data.is_dir() => get_dir_size(fs::read_dir(file.path())?)?,
+                data => data.len(),
+            };
+            Ok(acc + size)
+        })
+    }
+    get_dir_size(fs::read_dir(path.into())?)
 }
