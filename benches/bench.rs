@@ -4,7 +4,7 @@ use scale;
 
 fn bench_directory(c: &mut Criterion) {
     c.bench_function("get_dir_size", |b| {
-        b.iter(|| scale::get_dir_size(black_box("../")))
+        b.iter(|| scale::get_dir_size(black_box("../"), false))
     });
 }
 
