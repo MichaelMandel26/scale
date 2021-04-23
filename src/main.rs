@@ -1,5 +1,6 @@
 use clap::Clap;
-use scale::{convert, get_dir_size, get_file_size, Prefix};
+use pretty_bytes::converter::{convert, Prefix};
+use scale::{get_dir_size, get_file_size};
 use std::{fs, process};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;

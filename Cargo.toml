@@ -8,7 +8,7 @@ version = "0.1.2"
 
 [dependencies]
 clap = "3.0.0-beta.2"
-pretty-bytes = "0.2.2"
+pretty-bytes = {git = "https://github.com/Dzefo/rust-pretty-bytes"}
 
 [dev-dependencies]
 criterion = "0.3"
