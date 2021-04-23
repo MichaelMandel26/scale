@@ -1,22 +1,22 @@
-use clap::Clap;
 use pretty_bytes::converter::{convert, Prefix};
 use scale::{get_dir_size, get_file_size};
 use std::{fs, process};
+use structopt::StructOpt;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-#[derive(Clap)]
-#[clap(version = "0.1.2", author = "Dzefo")]
-struct Opts {
+#[derive(StructOpt, Debug)]
+#[structopt(name = "scale", version = "0.1.3")]
+struct Opt {
     /// The Path which should be evaluated
     input: String,
     /// Lists all the files with its size
-    #[clap(short, long)]
+    #[structopt(short, long)]
     list: bool,
 }
 
 fn main() -> Result<()> {
-    let opts: Opts = Opts::parse();
+    let opts = Opt::from_args();
     // Add option to just use current directory
     let size = if fs::metadata(&opts.input)?.is_file() {
         get_file_size(&opts.input)
