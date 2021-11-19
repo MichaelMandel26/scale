@@ -3,7 +3,7 @@ use std::{fs, path::PathBuf};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-pub fn get_file_size(path: &String) -> u64 {
+pub fn get_file_size(path: &str) -> u64 {
     let meta = fs::metadata(path);
     match meta {
         Ok(m) => m.len(),
