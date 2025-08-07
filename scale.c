@@ -53,7 +53,8 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  printf("Total size: %lld\n", size);
+  char buf[10];
+  printf("Total size: %s\n", readable_fs(size, buf));
 
   return EXIT_SUCCESS;
 }
@@ -73,7 +74,8 @@ static int walk(const char *fpath, const struct stat *sb, int typeflag,
   if (typeflag == FTW_F) {
     size += sb->st_size;
     if (list_mode) {
-      printf("%lld\t%s\n", sb->st_size, fpath);
+      char buf[10];
+      printf("%s\t%s\n", readable_fs(sb->st_size, buf), fpath);
     }
   }
   return 0;
@@ -97,4 +99,14 @@ static bool get_path_size(char *path) {
   }
 
   return false;
+}
+char *readable_fs(double size, char *buf) {
+  int i = 0;
+  const char *units[] = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+  while (size > 1024) {
+    size /= 1024;
+    i++;
+  }
+  sprintf(buf, "%.*f %s", i, size, units[i]);
+  return buf;
 }
