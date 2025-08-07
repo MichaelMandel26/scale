@@ -13,39 +13,38 @@ static const char *program_name;
 static off_t size = 0;
 static bool list_mode = false;
 
+static const char *short_opts = "hl";
+static const struct option long_opts[] = {{"help", no_argument, NULL, 'h'},
+                                          {"list", no_argument, NULL, 'l'},
+                                          {NULL, 0, NULL, 0}};
+
 int main(int argc, char *argv[]) {
   program_name = argv[0];
-
-  char *file = NULL;
-
-  const char *short_opts = "hl";
-  const struct option long_opts[] = {{"help", no_argument, NULL, 'h'},
-                                     {"list", no_argument, NULL, 'l'},
-                                     {NULL, 0, NULL, 0}};
-
   int opt;
-  while (optind < argc) {
-    if ((opt = getopt_long(argc, argv, short_opts, long_opts, NULL)) != -1) {
-      switch (opt) {
-      case 'h':
-        print_usage(stdout, EXIT_SUCCESS);
-        break;
-      case 'l':
-        list_mode = true;
-        break;
-      default:
-        print_usage(stdout, EXIT_FAILURE);
-        break;
-      }
-    } else {
-      file = argv[optind];
-      optind++;
+
+  while ((opt = getopt_long(argc, argv, short_opts, long_opts, NULL)) != -1) {
+    switch (opt) {
+    case 'h':
+      print_usage(stdout, EXIT_SUCCESS);
+      break;
+    case 'l':
+      list_mode = true;
+      break;
+    default:
+      print_usage(stderr, EXIT_FAILURE);
     }
   }
 
-  if (!file) {
-    print_usage(stdout, EXIT_FAILURE);
+  if (optind == argc) {
+    fprintf(stderr, "Error: missing <file> argument\n");
+    print_usage(stderr, EXIT_FAILURE);
   }
+  if (optind < argc - 1) {
+    fprintf(stderr, "Error: too many arguments\n");
+    print_usage(stderr, EXIT_FAILURE);
+  }
+
+  char *file = argv[optind];
 
   bool is_success = get_path_size(file);
   if (!is_success) {
