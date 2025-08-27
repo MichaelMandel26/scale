@@ -1,9 +1,15 @@
+CFLAGS := "-Wall -Wextra -Wpedantic"
+CFLAGS_OPTIMIZE := "-O2"
+
 build:
-  clang -Wall -Wextra -Wpedantic -O2 scale.c -o build/scale
+  clang {{CFLAGS}} {{CFLAGS_OPTIMIZE}} scale.c -o build/scale
 
 debug:
-  clang -Wall -Wextra -Wpedantic -g scale.c -o build/scale
+  clang {{CFLAGS}} -g scale.c -o build/scale
   lldb ./build/scale .
 
 run: build
   ./build/scale
+
+install:
+
